@@ -14,7 +14,7 @@ on:
         default: false
 permissions:
   contents: read
-  packages: write
+  id-token: write
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -27,28 +27,39 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          registry-url: https://npm.pkg.github.com
-          scope: '@raulaguila'
+          node-version: 24
           cache: pnpm
       - name: Verify tag matches package version
         run: node -e "if ('v' + require('./package.json').version !== process.env.RELEASE_TAG) process.exit(1)"
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm catalog:build
-      - name: Publish to GitHub Packages
+      - name: Publish to npm
         if: ${{ !inputs.verify_only }}
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install exact version as a consumer
+        run: |
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process';
+          import manifest from './package.json' with { type: 'json' };
+          const { name, version } = manifest;
+          const metadata = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}/${version}`);
+          if (metadata.status === 404) {
+            execFileSync('npm', ['publish', '--access', 'public'], { stdio: 'inherit' });
+          } else {
+            if (!metadata.ok) throw new Error(`npm registry returned ${metadata.status}`);
+            const published = await metadata.json();
+            const [local] = JSON.parse(execFileSync('npm', ['pack', '--ignore-scripts', '--json'], { encoding: 'utf8' }));
+            if (published.dist.integrity !== local.integrity) throw new Error('Published package differs from this tag');
+          }
+          NODE
+      - name: Install exact version anonymously
         working-directory: ${{ runner.temp }}
         run: |
+          unset NODE_AUTH_TOKEN NPM_TOKEN
+          export NPM_CONFIG_USERCONFIG=/dev/null
+          export NPM_CONFIG_REGISTRY=https://registry.npmjs.org
           mkdir maat-consumer && cd maat-consumer
           printf '%s\n' '{"name":"maat-consumer","private":true}' > package.json
-          pnpm add --save-exact "@raulaguila/maat-ui@${RELEASE_TAG#v}"
+          pnpm add --store-dir ./store --save-exact "@raulaguila/maat-ui@${RELEASE_TAG#v}"
           node -e "if (require('./package.json').dependencies['@raulaguila/maat-ui'] !== process.env.RELEASE_TAG.slice(1)) process.exit(1)"
-          pnpm install --frozen-lockfile
+          pnpm install --store-dir ./store --frozen-lockfile
           node --input-type=module -e "import { Button } from '@raulaguila/maat-ui/button'; if (!Button) process.exit(1)"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -4,19 +4,13 @@ O pacote **@raulaguila/maat-ui** é a biblioteca de componentes da família Maat
 
 ## Instalar e usar
 
-O pacote privado requer React 19, React DOM 19 e Tailwind CSS 4. Os consumidores configuram o escopo no `.npmrc` do projeto:
-
-```ini
-@raulaguila:registry=https://npm.pkg.github.com
-```
-
-Autentique a máquina uma vez com `npm login --scope=@raulaguila --auth-type=legacy --registry=https://npm.pkg.github.com`. Use seu usuário GitHub e um PAT clássico com `read:packages` como senha. Para instalar ou atualizar, escolha a versão em cada frontend:
+O pacote público requer React 19, React DOM 19 e Tailwind CSS 4. Escolha a versão em cada frontend:
 
 ```sh
-pnpm add --save-exact @raulaguila/maat-ui@0.2.1
+pnpm add --save-exact @raulaguila/maat-ui@0.2.2
 ```
 
-Inclua o `package.json` e o `pnpm-lock.yaml` no mesmo commit. No GitHub Actions, conceda ao repositório consumidor acesso de leitura em **Package settings → Manage Actions access** e use o `GITHUB_TOKEN` com `packages: read`. No Docker Compose, use o arquivo de autenticação local pelo segredo de build `npmrc`. Para indicar um arquivo específico, defina `MAAT_NPMRC_FILE`.
+Inclua o `package.json` e o `pnpm-lock.yaml` no mesmo commit.
 
 No CSS global, importe os estilos uma vez:
 
@@ -54,6 +48,7 @@ Botões, campos, seleção, checkbox, switch, badges, avatares, abas, cartões, 
 
 1. Execute `pnpm install --frozen-lockfile`, `pnpm test` e `pnpm catalog`. O catálogo permite alternar os três produtos, tema e densidade e testar os componentes. `pnpm catalog:build` gera a versão estática.
 2. Altere a versão seguindo SemVer. Uma remoção de componente, prop ou token público requer versão principal. Documente mudanças visuais que os consumidores devam conferir.
-3. Faça commit da versão e envie a tag correspondente, por exemplo `v0.2.1`. O workflow de publicação verifica a versão da tag, executa os testes, compila o catálogo e publica o pacote no GitHub Packages.
+3. No npm, configure o publicador confiável GitHub Actions para o repositório `raulaguila/maat-ui` e o workflow `publish.yml`.
+4. Faça commit da versão e envie a tag correspondente, por exemplo `v0.2.2`. O workflow de publicação verifica a versão da tag, executa os testes, compila o catálogo e publica o pacote no npm público e testa a instalação anônima.
 
 As referências de validação são Perfil, Workspaces/Datasets e a sidebar, com mouse e teclado no desktop e alvos de 44 px no toque.
