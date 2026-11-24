@@ -8,6 +8,10 @@ on:
         description: Existing release tag to publish
         required: true
         type: string
+      verify_only:
+        description: Test installation of an already published tag
+        type: boolean
+        default: false
 permissions:
   contents: read
   packages: write
@@ -33,10 +37,18 @@ jobs:
       - run: pnpm test
       - run: pnpm catalog:build
       - name: Publish to GitHub Packages
+        if: ${{ !inputs.verify_only }}
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Verify published package
-        run: npm view "@raulaguila/maat-ui@${RELEASE_TAG#v}" dist --json
+      - name: Install exact version as a consumer
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir maat-consumer && cd maat-consumer
+          printf '%s\n' '{"name":"maat-consumer","private":true}' > package.json
+          pnpm add --save-exact "@raulaguila/maat-ui@${RELEASE_TAG#v}"
+          node -e "if (require('./package.json').dependencies['@raulaguila/maat-ui'] !== process.env.RELEASE_TAG.slice(1)) process.exit(1)"
+          pnpm install --frozen-lockfile
+          node --input-type=module -e "import { Button } from '@raulaguila/maat-ui/button'; if (!Button) process.exit(1)"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
