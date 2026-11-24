@@ -1,0 +1,386 @@
+@source "./dist";
+@custom-variant dark (&:is(.dark *));
+@font-face { font-family: "IBM Plex Sans"; src: url("@maat/ui/fonts/ibm-plex-sans-latin-variable.woff2") format("woff2"); font-style: normal; font-weight: 400 700; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("@maat/ui/fonts/ibm-plex-mono-latin-400.woff2") format("woff2"); font-style: normal; font-weight: 400; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("@maat/ui/fonts/ibm-plex-mono-latin-500.woff2") format("woff2"); font-style: normal; font-weight: 500; font-display: swap; }
+@font-face { font-family: "Source Serif 4"; src: url("@maat/ui/fonts/source-serif-4-latin-normal-variable.woff2") format("woff2"); font-style: normal; font-weight: 400 700; font-display: swap; }
+:where(:root) { --font-ibm-plex-sans: "IBM Plex Sans"; --font-ibm-plex-mono: "IBM Plex Mono"; --font-source-serif: "Source Serif 4"; }
+@theme inline {
+  --color-background: var(--background);
+  --color-content: var(--content);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-brand: var(--font-source-serif), Georgia, serif;
+  --color-brand-mark: var(--brand-mark);
+  --font-heading: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-info: var(--info);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --brand-mark: #08655f;
+  --brand-glyph: #fff;
+  /* Categorical chart hues, in fixed order (validated for colour-blind separation). */
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+  --series-5: #e87ba4; --series-6: #008300; --series-7: #6250d6; --series-8: #e34948;
+  /* Fixed Thoth cobalt; legacy personal accent preferences remain stored. */
+  --accent-h: 266;
+
+  /* Keep the shared brand-fill contract with a single cobalt color. */
+  --gradient-brand: linear-gradient(
+    135deg,
+    oklch(0.514480 0.176592 265.697500),
+    oklch(0.514480 0.176592 265.697500)
+  );
+  --brand-foreground: oklch(0.99 0 0);
+  --brand-panel: var(--brand-mark);
+
+  /* Semantic neutral ladder: chrome → canvas → cards → interaction states.
+     Opaque levels make hover/selection readable on every surface. */
+  --background: oklch(0.984152 0.003413 247.857544);
+  --content: oklch(0.984152 0.003413 247.857544);
+  --foreground: oklch(0.279495 0.036848 260.030984);
+  --card: oklch(1.000000 0.000000 89.875563);
+  --card-foreground: oklch(0.279495 0.036848 260.030984);
+  --popover: oklch(1.000000 0.000000 89.875563);
+  --popover-foreground: oklch(0.279495 0.036848 260.030984);
+  /* Brand accent drives primary + ring. */
+  --primary: oklch(0.514480 0.176592 265.697500);
+  --primary-foreground: oklch(1 0 0);
+  /* Primary as text on its own 16% tint (active nav); darker for AA headroom. */
+  --primary-strong: oklch(0.45 0.18 266);
+  --secondary: oklch(0.959257 0.006870 247.896436);
+  --secondary-foreground: oklch(0.279495 0.036848 260.030984);
+  --muted: oklch(0.959257 0.006870 247.896436);
+  --muted-foreground: oklch(0.445533 0.037447 257.280836);
+  /* shadcn --accent is a neutral hover surface (not the brand accent). */
+  --accent: oklch(0.947049 0.009702 252.812502);
+  --accent-foreground: oklch(0.279495 0.036848 260.030984);
+  --destructive: oklch(0.49 0.18 25);
+  --success: oklch(0.44 0.12 150);
+  --warn: oklch(0.44 0.09 65);
+  --info: oklch(0.46 0.12 240);
+  --border: oklch(0.89 0.014 255);
+  --input: oklch(0.6 0.034 257);
+  --input-fill: oklch(.94 .005 226);
+  --ring: oklch(0.58 0.16 var(--accent-h));
+  --radius: 0.625rem;
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.279495 0.036848 260.030984);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: oklch(0.947049 0.009702 252.812502);
+  --sidebar-accent-foreground: oklch(0.279495 0.036848 260.030984);
+  --sidebar-border: oklch(0.89 0.014 255);
+  --sidebar-ring: oklch(0.58 0.16 var(--accent-h));
+
+  /* Density tokens (comfortable defaults; compact overrides below). */
+  --space-page: 1.25rem;
+  --space-page-y: 1rem;
+  --space-section: 1.25rem;
+  --space-list: 0.75rem;
+  --space-card: 1.25rem;
+  --space-row: 0.5rem;
+  --control-h: 2rem;
+  --control-h-sm: 1.75rem;
+  --control-h-lg: 2.25rem;
+  --nav-item-h: 2.25rem;
+  --nav-pad-y: 0.5rem;
+  --nav-gap: 0.25rem;
+  --header-h: 3.5rem;
+  --table-cell-px: 1rem;
+  --table-cell-py: 0.625rem;
+  --table-head-py: 0.625rem;
+  --table-row-height: 2.875rem;
+  --table-head-height: 2.75rem;
+  --table-group-height: 2.25rem;
+}
+
+.dark {
+  --brand-mark: #82d5c8;
+  --brand-glyph: #103b37;
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+  --series-5: #d55181; --series-6: #0ca30c; --series-7: #9085e9; --series-8: #e66767;
+  /* Dark palette: chrome stays deepest; rows, menus and hover states climb
+     the ladder enough to remain distinguishable from the content canvas. */
+  --gradient-brand: linear-gradient(
+    135deg,
+    oklch(0.747312 0.129614 272.266084),
+    oklch(0.747312 0.129614 272.266084)
+  );
+  /* The brand panel stays deep in dark mode: the light primary would glare. Buttons keep --gradient-brand. */
+  --brand-panel: #104641;
+  --brand-foreground: oklch(0.96 0.01 270);
+  --background: oklch(.17 0.014 var(--accent-h));
+  --content: oklch(.17 0.014 var(--accent-h));
+  --foreground: oklch(.94 0.006 var(--accent-h));
+  --card: oklch(.25 0.014 var(--accent-h));
+  --card-foreground: oklch(.94 0.006 var(--accent-h));
+  --popover: oklch(.27 0.014 var(--accent-h));
+  --popover-foreground: oklch(.94 0.006 var(--accent-h));
+  --primary: oklch(0.747312 0.129614 272.266084);
+  --primary-foreground: oklch(0.187396 0.012644 270.658583);
+  --primary-strong: var(--primary);
+  --secondary: oklch(.29 0.014 var(--accent-h));
+  --secondary-foreground: oklch(.94 0.006 var(--accent-h));
+  --muted: oklch(.29 0.014 var(--accent-h));
+  --muted-foreground: oklch(.77 0.006 var(--accent-h));
+  --accent: oklch(.32 0.014 var(--accent-h));
+  --accent-foreground: oklch(.94 0.006 var(--accent-h));
+  --destructive: oklch(0.80 0.12 22);
+  --success: oklch(0.80 0.12 150);
+  --warn: oklch(0.82 0.11 75);
+  --info: oklch(0.80 0.10 240);
+  --border: oklch(.40 0.014 var(--accent-h));
+  --input: oklch(.62 0.012 var(--accent-h));
+  --input-fill: oklch(.40 0.014 var(--accent-h));
+  --ring: oklch(0.70 0.15 var(--accent-h));
+  --sidebar: oklch(.21 0.014 var(--accent-h));
+  --sidebar-foreground: oklch(.94 0.006 var(--accent-h));
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: oklch(.32 0.014 var(--accent-h));
+  --sidebar-accent-foreground: oklch(.94 0.006 var(--accent-h));
+  --sidebar-border: oklch(.40 0.014 var(--accent-h));
+  --sidebar-ring: oklch(0.70 0.15 var(--accent-h));
+}
+
+[data-brand="thoth"] { --brand-mark: #37359b; }
+.dark[data-brand="thoth"] { --brand-mark: #b7b8ff; --brand-glyph: #201f53; --brand-panel: #28265f; }
+[data-brand="khnum"] { --brand-mark: #a34f32; }
+.dark[data-brand="khnum"] { --brand-mark: #f0ae89; --brand-glyph: #452515; --brand-panel: #452515; }
+:root { --rail-surface: var(--sidebar); --rail-border: var(--border); }
+
+html[data-density="compact"] {
+  --space-page: 1rem;
+  --space-page-y: 0.75rem;
+  --space-section: 0.75rem;
+  --space-list: 0.5rem;
+  --space-card: 0.875rem;
+  --space-row: 0.375rem;
+  --control-h: 1.75rem;
+  --control-h-sm: 1.5rem;
+  --control-h-lg: 2rem;
+  --nav-item-h: 2rem;
+  --nav-pad-y: 0.375rem;
+  --nav-gap: 0.125rem;
+  --header-h: 2.75rem;
+  --table-cell-px: 0.75rem;
+  --table-cell-py: 0.25rem;
+  --table-head-py: 0.5rem;
+  --table-row-height: 2.1875rem;
+  --table-head-height: 2.5rem;
+  --table-group-height: 2rem;
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  :root, html[data-density="compact"] {
+    --control-h: 2.75rem;
+    --control-h-sm: 2.75rem;
+    --control-h-lg: 2.75rem;
+    --nav-item-h: 2.75rem;
+    --header-h: 3.5rem;
+  }
+  :where(button:not([data-citation], [data-slot="checkbox"], [role="switch"]), [role="button"], [data-slot="button"], [data-slot="select-trigger"], [data-slot="dropdown-select-trigger"], [data-slot="dropdown-menu-trigger"], [data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-sub-trigger"], [data-slot="select-item"], [data-slot="dropdown-menu-radio-item"], [data-slot="dropdown-menu-checkbox-item"], [data-slot="tabs-trigger"], summary) {
+    min-height: 2.75rem;
+  }
+  :where(button[aria-label]:not([data-citation], [data-slot="checkbox"], [role="switch"]), [data-slot="dropdown-menu-trigger"][aria-label]) {
+    min-width: 2.75rem;
+  }
+  [data-slot="tabs-list"] {
+    min-height: 3.125rem;
+  }
+  [data-slot="checkbox"]::after {
+    inset: -14px;
+  }
+  :where([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="dropdown-select-trigger"]) {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  :root, html[data-density="compact"] {
+    --space-page: 1rem;
+  }
+}
+
+@layer base { body { @apply bg-background text-foreground font-sans; } * { @apply border-border; } :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; } }
+
+.family-management {
+  container-type: inline-size;
+  padding-bottom: 32px;
+}
+.family-management-body { padding:0 var(--space-page); }
+.family-toolbar { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px; }
+.family-search { position:relative;flex:1 1 260px;max-width:440px;min-width:0; }
+.family-search > svg { position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted-foreground);pointer-events:none; }
+.family-search input { padding-left:38px;padding-right:44px;min-height:44px; }
+.family-search > button { position:absolute;right:1px;top:0;display:grid;place-items:center;width:44px;height:44px;border-radius:var(--radius);color:var(--muted-foreground); }
+.family-search > button:hover { color:var(--foreground);background:var(--accent); }
+.family-result-count { font-size:12px;color:var(--muted-foreground); }
+.family-group { margin-top:24px; }
+.family-group > h2 { display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:13px;font-weight:600; }
+.family-group > h2 > span { display:grid;place-items:center;min-width:22px;height:22px;padding-inline:5px;border-radius:99px;background:var(--muted);color:var(--muted-foreground);font-size:11px;font-weight:500; }
+.family-list { list-style:none;margin:0;padding:0;border:1px solid var(--border);border-radius:min(12px,var(--radius));overflow:hidden;background:var(--card); }
+.family-row {
+  position:relative;
+  display:grid;
+  grid-template-areas:"identity role stats actions";
+  grid-template-columns:minmax(0,1fr) 7rem minmax(0,1.6fr) auto;
+  align-items:center;
+  gap:8px 16px;
+  min-height:72px;padding:12px 14px;border-top:1px solid var(--border);border-inline-start:2px solid transparent;transition:background-color 150ms ease; }
+.family-row:first-child { border-top:0; }
+.family-row:hover,.family-row:focus-within { background:var(--accent); }
+.family-open { grid-area:identity;display:flex;align-items:center;gap:12px;min-height:44px;min-width:0;text-align:left;border-radius:var(--radius); }
+.family-avatar { display:grid;place-items:center;width:40px;height:40px;flex-shrink:0;border-radius:50%;font-size:13px;font-weight:600; }
+.family-copy { display:flex;flex-direction:column;min-width:0;gap:6px; }
+.family-name { font-size:14px;font-weight:600;line-height:1.35;overflow-wrap:anywhere; }
+.family-roles { grid-area:role;display:flex;flex-direction:column;align-items:flex-start;gap:4px; }
+.family-description { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--muted-foreground); }
+.family-stats { grid-area:stats;display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.4fr);align-items:center;gap:8px;color:var(--muted-foreground);font-size:12px; }
+.family-stat { display:flex;align-items:center;gap:5px;min-width:0; }
+.family-stat > svg { flex-shrink:0; }
+.family-stat > span { overflow-wrap:anywhere;font-variant-numeric:tabular-nums; }
+.family-activity { overflow-wrap:anywhere; }
+.family-open::after { content:"";position:absolute;inset:0; }
+.family-activity,.family-actions { position:relative; }
+.family-actions { grid-area:actions;display:flex;justify-self:end;align-items:center;gap:4px; }
+.family-icon-action { display:grid;place-items:center;flex-shrink:0;width:32px;height:32px;border-radius:var(--radius);color:var(--muted-foreground); }
+.family-icon-action:hover { background:var(--background);color:var(--foreground); }
+.family-icon-action[data-pinned] { color:var(--primary); }
+.family-open-action { min-height:32px;font-size:0.8rem; }
+.family-open:focus-visible,.family-icon-action:focus-visible,.family-search > button:focus-visible { outline:2px solid var(--ring);outline-offset:3px; }
+@container (max-width:960px) {
+  .family-row {
+    grid-template-areas:"identity role actions" "stats stats stats";
+    grid-template-columns:minmax(0,1fr) 7rem auto;
+  }
+}
+@container (max-width:600px) {
+  .family-toolbar { align-items:stretch;flex-direction:column;gap:6px; }
+  .family-search { flex:auto;max-width:none; }
+  .family-row {
+    grid-template-areas:"identity identity" "role actions" "stats stats";
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:6px 10px;
+    padding:12px 10px;
+  }
+  .family-roles { flex-direction:row;align-items:center;flex-wrap:wrap; }
+  .family-open-action { display:none; }
+  .family-icon-action { width:44px;height:44px; }
+  .family-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:767px) {
+  .family-icon-action { width:44px;height:44px; }
+  .family-open-action { min-height:44px; }
+}
+
+[data-ui-workspace-rail] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 8px;
+  width: 256px;
+  height: 100%;
+  min-height: 0;
+  padding: 16px 12px;
+  border: 1px solid var(--rail-border);
+  border-radius: 28px;
+  background: var(--rail-surface);
+  color: var(--foreground)
+}
+[data-ui-workspace-rail][data-collapsed] {
+  width: 64px;
+  padding-inline: 8px
+}
+.rail-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  height: 64px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rail-border)
+}
+.rail-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  scrollbar-width: none
+}
+.rail-footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rail-border)
+}
+.rail-footer .rail-global {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  min-width: 0;
+  min-height: 48px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  text-align: left
+}
+.rail-workspaces {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0
+}
+
+.profile-content [role="tablist"] [role="tab"][aria-selected] { min-height: 38px; }
+@media (max-width: 767px), (pointer: coarse) {
+  .profile-content [role="tablist"] [role="tab"][aria-selected] { min-height: 44px; }
+}
