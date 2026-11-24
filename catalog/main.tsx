@@ -6,7 +6,7 @@ import {
   Badge, Button, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger,
   FormSection, FormSections, Input, Label, ManagementGroup, ManagementRow,
   PageBody, PageHeader, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch,
-} from "@maat/ui";
+} from "@raulaguila/maat-ui";
 import "./style.css";
 
 const brands = { thoth: "Thoth", seshat: "Seshat", khnum: "Khnum" };

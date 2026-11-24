@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { FormSection, FormSections, ManagementGroup, ManagementRow, Sidebar, SidebarBody, SidebarFooter } from "@maat/ui/layout";
-import { FamilyUIProvider } from "@maat/ui/labels";
-import { TablePagination } from "@maat/ui/pagination";
+import { FormSection, FormSections, ManagementGroup, ManagementRow, Sidebar, SidebarBody, SidebarFooter } from "@raulaguila/maat-ui/layout";
+import { FamilyUIProvider } from "@raulaguila/maat-ui/labels";
+import { TablePagination } from "@raulaguila/maat-ui/pagination";
 
 test("groups label their lists independently, including when titles repeat", () => {
   const group = () => h(ManagementGroup, {title: "Meus", count: 1}, h(ManagementRow, {}, "Manual"));
