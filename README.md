@@ -7,7 +7,7 @@ O pacote **@raulaguila/maat-ui** é a biblioteca de componentes da família Maat
 O pacote público requer React 19, React DOM 19 e Tailwind CSS 4. Escolha a versão em cada frontend:
 
 ```sh
-pnpm add --save-exact @raulaguila/maat-ui@0.2.2
+pnpm add --save-exact @raulaguila/maat-ui@0.3.0
 ```
 
 Inclua o `package.json` e o `pnpm-lock.yaml` no mesmo commit.
@@ -37,6 +37,8 @@ export function Profile() {
 Para localizar controles, envolva a aplicação em `FamilyUIProvider` com `labels={{ close, rows, of, previous, next }}`. O idioma inicial da biblioteca é português. Para importar um único módulo, use, por exemplo, `@raulaguila/maat-ui/button` ou `@raulaguila/maat-ui/layout`.
 
 ## Componentes
+
+`PasswordInput` oferece visibilidade da senha e informa o estado de Caps Lock. `ConfirmDialog` aguarda ações assíncronas, mantém o foco inicial em Cancelar para ações destrutivas e aceita `formatError` para mensagens do produto. `EmptyState` aceita ação opcional e variante compacta. `QueryErrorState` mostra uma mensagem de erro e oferece nova tentativa quando recebe `onRetry`. As aplicações fornecem traduções por `FamilyUIProvider` e decidem quando a operação pode ser repetida.
 
 O Seshat é a referência de apresentação. Quando o Thoth precisa de um controle adicional, ele usa os mesmos tokens, fontes e estados. Entre as extensões estão o seletor pesquisável, os grupos de campos, o painel recolhível e os gráficos. `IconAction` implementa o botão de ícone com nome acessível e tooltip. `PageTabs` mantém as abas endereçáveis pelo fragmento da URL.
 

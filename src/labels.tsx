@@ -8,6 +8,15 @@ export interface FamilyLabels {
   previous: string;
   next: string;
   noChoices?: string;
+  hidePassword?: string;
+  showPassword?: string;
+  cancel?: string;
+  confirm?: string;
+  confirming?: string;
+  confirmFailed?: string;
+  errorTitle?: string;
+  errorDescription?: string;
+  retry?: string;
 }
 const Labels = createContext<FamilyLabels>({
   close: "Fechar", rows: "Linhas", of: "de", previous: "Página anterior", next: "Próxima página",

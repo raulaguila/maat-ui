@@ -5,6 +5,7 @@ import {
   Sidebar, SidebarBody, SidebarFooter, SidebarGroup, SidebarDrawer, TooltipProvider,
   Badge, Button, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger,
   FormSection, FormSections, Input, Label, ManagementGroup, ManagementRow,
+  ConfirmDialog, EmptyState, PasswordInput, QueryErrorState,
   PageBody, PageHeader, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch,
 } from "@raulaguila/maat-ui";
 import "./style.css";
@@ -14,6 +15,8 @@ function Catalog() {
   const [brand, setBrand] = useState("seshat");
   const [dark, setDark] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(true);
   const [text, setText] = useState("");
   const [language, setLanguage] = useState<string | null>(null);
   const [groupOpen, setGroupOpen] = useState(true);
@@ -42,8 +45,19 @@ function Catalog() {
           <Label htmlFor="sample">Título de exemplo</Label><Input id="sample" value={text} onChange={e => setText(e.target.value)} />
           <div className="flex flex-wrap gap-2"><Dialog><DialogTrigger render={<Button />}>Ver prévia</DialogTrigger>
             <DialogContent><DialogTitle>Prévia</DialogTitle><DialogDescription>{text.trim() || "Título de exemplo"}</DialogDescription></DialogContent>
-          </Dialog><Button variant="outline" disabled={!text} onClick={() => setText("")}>Limpar</Button></div>
+          </Dialog><Button variant="outline" disabled={!text} onClick={() => setConfirmOpen(true)}>Limpar</Button></div>
         </div>
+      </FormSection>
+      <ConfirmDialog open={confirmOpen} onOpenChange={setConfirmOpen} title="Limpar o título de exemplo?"
+        destructive confirmLabel="Limpar" onConfirm={() => setText("")} />
+      <FormSection title="Senha">
+        <Label htmlFor="sample-password">Senha de exemplo</Label>
+        <PasswordInput id="sample-password" autoComplete="off" />
+      </FormSection>
+      <FormSection title="Estados da lista">
+        {loadFailed
+          ? <QueryErrorState title="Falha ao carregar exemplos" onRetry={() => setLoadFailed(false)} />
+          : <EmptyState title="Nenhum exemplo" action={<Button variant="outline" onClick={() => setLoadFailed(true)}>Simular erro</Button>} />}
       </FormSection>
       <FormSection title="Seleção com busca">
         <SearchableChoice aria-label="Idioma" searchLabel="Buscar idioma" placeholder="Escolher idioma"
