@@ -7,7 +7,7 @@ O pacote **@raulaguila/maat-ui** é a biblioteca de componentes da família Maat
 O pacote público requer React 19, React DOM 19 e Tailwind CSS 4. Escolha a versão em cada frontend:
 
 ```sh
-pnpm add --save-exact @raulaguila/maat-ui@0.3.0
+pnpm add --save-exact @raulaguila/maat-ui@0.4.0
 ```
 
 Inclua o `package.json` e o `pnpm-lock.yaml` no mesmo commit.
@@ -43,6 +43,8 @@ Para localizar controles, envolva a aplicação em `FamilyUIProvider` com `label
 O Seshat é a referência de apresentação. Quando o Thoth precisa de um controle adicional, ele usa os mesmos tokens, fontes e estados. Entre as extensões estão o seletor pesquisável, os grupos de campos, o painel recolhível e os gráficos. `IconAction` implementa o botão de ícone com nome acessível e tooltip. `PageTabs` mantém as abas endereçáveis pelo fragmento da URL.
 
 Os módulos opcionais `@raulaguila/maat-ui/chart` (Recharts) e `@raulaguila/maat-ui/sonner` (Sonner e next-themes) têm entradas próprias. Instale os respectivos peers no produto que os utiliza.
+
+`ApplicationShell`, disponível em `@raulaguila/maat-ui/layout`, organiza a navegação lateral, o cabeçalho e a região principal rolável. Passe `sidebar` (incluindo o drawer), `header`, `skipLabel` traduzido e o conteúdo como filho. A biblioteca define margens, alturas e link de salto para o conteúdo nas três plataformas. O produto continua responsável por rotas, permissões e estado da navegação.
 
 Botões, campos, seleção, checkbox, switch, badges, avatares, abas, cartões, tabelas, paginação, menus, diálogos, painéis, tooltips e skeletons compartilham tamanhos e estados. `Sidebar`, `SidebarBody` e `SidebarFooter` mantêm um centro rolável e o rodapé na base. A aplicação fornece a marca e os itens do menu. `ManagementGroup` e `ManagementRow` agrupam itens com um título acessível. Use o contêiner `family-management` e as áreas `family-open`, `family-roles`, `family-stats` e `family-actions` para reorganizar as linhas pela largura disponível.
 

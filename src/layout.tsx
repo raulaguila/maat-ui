@@ -1,6 +1,28 @@
 import { useId, type ComponentProps, type ReactNode } from "react";
 import { cn } from "./cn.js";
 
+/** The product supplies its navigation and actions; Maat owns viewport geometry and landmarks. */
+export function ApplicationShell({ sidebar, header, children, skipLabel, mainId = "main-content" }: {
+  sidebar: ReactNode;
+  header: ReactNode;
+  children: ReactNode;
+  skipLabel: string;
+  mainId?: string;
+}) {
+  return (
+    <div data-ui-app-shell="">
+      <a href={`#${mainId}`} className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring">
+        {skipLabel}
+      </a>
+      {sidebar}
+      <div data-ui-app-column="">
+        <header data-ui-app-header="">{header}</header>
+        <main data-ui-app-content="" id={mainId} tabIndex={-1}>{children}</main>
+      </div>
+    </div>
+  );
+}
+
 export function PageHeader({
   title,
   description,

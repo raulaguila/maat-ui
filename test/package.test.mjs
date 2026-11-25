@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { FormSection, FormSections, ManagementGroup, ManagementRow, Sidebar, SidebarBody, SidebarFooter } from "@raulaguila/maat-ui/layout";
+import { ApplicationShell, FormSection, FormSections, ManagementGroup, ManagementRow, Sidebar, SidebarBody, SidebarFooter } from "@raulaguila/maat-ui/layout";
 import { FamilyUIProvider } from "@raulaguila/maat-ui/labels";
 import { TablePagination } from "@raulaguila/maat-ui/pagination";
 
@@ -27,4 +27,13 @@ test("pagination uses the host labels and page sizes", () => {
   })));
   assert.equal(render(5), "");
   assert.match(render(6), /aria-label="Next"/);
+});
+
+test("the application shell links the translated skip action to its focusable main landmark", () => {
+  const html = renderToStaticMarkup(h(ApplicationShell, {
+    skipLabel: "Skip to content", mainId: "workspace", sidebar: h("aside", {}, "Projects"), header: "Account",
+  }, "Overview"));
+  assert.match(html, /href="#workspace"[^>]*>Skip to content<\/a>/);
+  assert.match(html, /<header[^>]*>Account<\/header>/);
+  assert.match(html, /<main[^>]*id="workspace"[^>]*tabindex="-1"[^>]*>Overview<\/main>/i);
 });
