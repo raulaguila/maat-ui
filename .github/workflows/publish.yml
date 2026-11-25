@@ -57,22 +57,20 @@ jobs:
           unset NODE_AUTH_TOKEN NPM_TOKEN
           export NPM_CONFIG_USERCONFIG=/dev/null
           export NPM_CONFIG_REGISTRY=https://registry.npmjs.org
-          # npm can accept a publication before the package index lists the version.
-          node --input-type=module <<'NODE'
-          const version = process.env.RELEASE_TAG.slice(1);
-          const index = 'https://registry.npmjs.org/@raulaguila%2fmaat-ui';
-          for (let attempt = 1; ; attempt++) {
-            const res = await fetch(index, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(15000) });
-            if (res.ok && (await res.json()).versions?.[version]) break;
-            if (!res.ok && res.status !== 404 && res.status !== 429 && res.status < 500)
-              throw new Error('npm registry returned ' + res.status);
-            if (attempt === 30) throw new Error('npm index does not list version ' + version);
-            await new Promise(resolve => setTimeout(resolve, 10000));
-          }
-          NODE
           mkdir maat-consumer && cd maat-consumer
           printf '%s\n' '{"name":"maat-consumer","private":true}' > package.json
-          pnpm add --store-dir ./store --save-exact "@raulaguila/maat-ui@${RELEASE_TAG#v}"
+          # Different registry caches can see a newly published version at different times.
+          for attempt in {1..30}; do
+            if pnpm add --store-dir ./store --save-exact "@raulaguila/maat-ui@${RELEASE_TAG#v}" > install.log 2>&1; then
+              cat install.log
+              break
+            fi
+            cat install.log
+            if [[ "$attempt" == 30 ]] || ! grep -q 'ERR_PNPM_NO_MATCHING_VERSION' install.log; then
+              exit 1
+            fi
+            sleep 10
+          done
           node -e "if (require('./package.json').dependencies['@raulaguila/maat-ui'] !== process.env.RELEASE_TAG.slice(1)) process.exit(1)"
           pnpm install --store-dir ./store --frozen-lockfile
           node --input-type=module -e "import { Button } from '@raulaguila/maat-ui/button'; if (!Button) process.exit(1)"
