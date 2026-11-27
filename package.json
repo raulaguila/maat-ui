@@ -159,7 +159,7 @@
     "prepack": "pnpm build",
     "catalog": "pnpm build && vite catalog",
     "catalog:build": "pnpm build && vite build catalog",
-    "test": "pnpm build && node --test test/*.test.mjs"
+    "test": "pnpm build && node --test test/*.test.mjs && python3 -B -m unittest discover -s test -p 'test_*.py'"
   },
   "peerDependencies": {
     "react": "^19.0.0",

@@ -1,4 +1,4 @@
-"""Maat Make contract v1. Copy this file from maat-ui/tools into each product CI."""
+"""Maat Make contract v2. Copy this file from maat-ui/tools into each product CI."""
 
 import argparse
 import os
@@ -9,7 +9,7 @@ import sys
 
 COMMON = "help init build lint test compose-up compose-build compose-down"
 PROFILES = {
-    "backend": "format migrate-create migrate-up migrate-down migrate-version",
+    "backend": "format migrate-create migrate-up migrate-down migrate-version db-restore verify-restore",
     "frontend": "install dev check check-i18n",
     "worker": "install dev check test-unit test-training check-gpu",
 }

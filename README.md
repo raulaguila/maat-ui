@@ -62,3 +62,23 @@ As referências de validação são Perfil, Workspaces/Datasets e a sidebar, com
 O [contrato da família](tools/check_make_contract.py) define os alvos comuns e os perfis `backend`, `frontend` e `worker` (treino de IA). Cada plataforma mantém uma cópia deste arquivo em `.github/scripts/`. Ao mudar a lista, copie o arquivo para os repositórios do backend e do frontend do Thoth, do Seshat e do Khnum no mesmo conjunto de alterações. A CI de cada repositório verifica seu próprio checkout com Python 3 e GNU Make, sem acessar os outros repositórios.
 
 Para verificar um componente localmente, execute, por exemplo, `python3 tools/check_make_contract.py frontend ../dataset/frontend` a partir deste repositório. O verificador lê as regras resolvidas pelo Make e aceita aliases que levem a uma receita. A execução das suítes e dos builds continua nos jobs de cada componente.
+
+### Contrato operacional v2
+
+| Área | Critério verificável |
+| --- | --- |
+| Recuperação | `make db-restore` restaura em destino novo e recusa destino existente. `make verify-restore` verifica uma restauração isolada. O ensaio de cada produto deve comprovar que os dados de origem permanecem íntegros; no Khnum, deve incluir os adaptadores. Uma eventual substituição do banco ativo tem comando próprio e exige escolha explícita. |
+| Saúde | `GET /livez` indica que o processo atende. `GET /readyz` retorna 200 quando a aplicação pode atender e 503 quando perde a dependência obrigatória. Os healthchecks de prontidão usam essa segunda rota. Probes legados preservam seu significado. |
+| CI do backend | O pipeline verifica compilação, testes de integração com o banco, lint e análise de vulnerabilidades Go com versões de ferramentas fixadas. |
+| Regressão visual | A CI de cada frontend compara imagens de referência do perfil, sidebar e lista principal, no desktop e no celular. Também verifica largura e centralização do card de login. |
+| Erros HTTP | O status vem no HTTP. O corpo público tem `code` textual estável, `message` legível e, quando disponíveis, `field` e `details`. Clientes do Thoth podem solicitar esse formato com `X-Maat-Error-Format: 1`; a resposta padrão da v1 preserva o tipo numérico de `code`. |
+| Autenticação | As APIs publicam operações de conta em `/v1/auth/*`, incluindo login e refresh. Endereços públicos e contratos anteriores continuam funcionando. A sessão de cada plataforma permanece independente. |
+| OpenAPI | `GET /openapi.yaml` fornece OpenAPI 3 sem credenciais; os formatos e endereços de documentação já utilizados continuam disponíveis. A CI do produto valida a geração do documento. |
+
+O verificador Make confirma os alvos disponíveis. Para exercitar a API já iniciada, use o smoke HTTP somente leitura a partir do checkout Maat. Informe o endereço da API da instalação e o produto (`thoth`, `seshat` ou `khnum`).
+
+```sh
+python3 tools/check_http_contract.py khnum http://127.0.0.1:8090
+```
+
+Para o cenário de banco indisponível, use uma instalação de teste isolada. Com a falha já simulada, acrescente `--expect-ready 503`. O smoke verifica o processo, a prontidão, o erro de uma consulta de perfil sem autenticação e a versão publicada do OpenAPI. A simulação de falha e os testes autenticados ficam com a suíte do produto.
