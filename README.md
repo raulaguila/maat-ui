@@ -56,3 +56,9 @@ Botões, campos, seleção, checkbox, switch, badges, avatares, abas, cartões, 
 4. Faça commit da versão e envie a tag correspondente, por exemplo `v0.2.2`. O workflow de publicação verifica a versão da tag, executa os testes, compila o catálogo e publica o pacote no npm público e testa a instalação anônima.
 
 As referências de validação são Perfil, Workspaces/Datasets e a sidebar, com mouse e teclado no desktop e alvos de 44 px no toque.
+
+## Contrato de comandos Make
+
+O [contrato da família](tools/check_make_contract.py) define os alvos comuns e os perfis `backend`, `frontend` e `worker` (treino de IA). Cada plataforma mantém uma cópia deste arquivo em `.github/scripts/`. Ao mudar a lista, copie o arquivo para os repositórios do backend e do frontend do Thoth, do Seshat e do Khnum no mesmo conjunto de alterações. A CI de cada repositório verifica seu próprio checkout com Python 3 e GNU Make, sem acessar os outros repositórios.
+
+Para verificar um componente localmente, execute, por exemplo, `python3 tools/check_make_contract.py frontend ../dataset/frontend` a partir deste repositório. O verificador lê as regras resolvidas pelo Make e aceita aliases que levem a uma receita. A execução das suítes e dos builds continua nos jobs de cada componente.
